@@ -83,7 +83,7 @@ A **production-ready API Gateway** with advanced security features designed for 
 
 ```bash
 # Clone the repository
-git clone https://github.com/gabriellafis/secure-financial-api-gateway.git
+git clone https://github.com/galafis/secure-financial-api-gateway.git
 cd secure-financial-api-gateway
 
 # Install dependencies
@@ -386,7 +386,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Gabriel Demetrios Lafis**
 
-- GitHub: [@gabriellafis](https://github.com/gabriellafis)
+- GitHub: [@galafis](https://github.com/galafis)
 - LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-lafis)
 
 ---
@@ -420,7 +420,7 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 **Gabriel Demetrios Lafis**
 
-- GitHub: [@gabriellafis](https://github.com/gabriellafis)
+- GitHub: [@galafis](https://github.com/galafis)
 - LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-lafis)
 
 ---
