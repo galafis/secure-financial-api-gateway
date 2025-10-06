@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green.svg)](https://fastapi.tiangolo.com/)
-[![Security](https://img.shields.io/badge/security-hardened-brightgreen.svg)]()
+[![Security](https://img.shields.io/badge/security-hardened-brightgreen.svg)](https://github.com/galafis/secure-financial-api-gateway)
 
 [English](#english) | [Português](#português)
 
