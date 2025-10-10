@@ -1,9 +1,13 @@
 # 🔐 Secure Financial API Gateway
 
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green.svg)](https://fastapi.tiangolo.com/)
 [![Security](https://img.shields.io/badge/security-hardened-brightgreen.svg)](https://github.com/galafis/secure-financial-api-gateway)
+
+
 
 [English](#english) | [Português](#português)
 
@@ -254,9 +258,7 @@ secure-financial-api-gateway/
 │   └── utils/
 │       └── logger.py               # Logging utilities
 ├── tests/
-│   ├── test_auth.py                # Authentication tests
-│   ├── test_rate_limiter.py        # Rate limiter tests
-│   └── test_circuit_breaker.py     # Circuit breaker tests
+│   └── test_auth.py                # Authentication tests
 ├── config/
 │   └── settings.py                 # Configuration settings
 ├── docs/
@@ -314,7 +316,7 @@ CIRCUIT_BREAKER_TIMEOUT=60
 ### Run Unit Tests
 
 ```bash
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 ### Test Rate Limiting

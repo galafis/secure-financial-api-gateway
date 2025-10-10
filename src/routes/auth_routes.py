@@ -8,7 +8,7 @@ Routes for user authentication and authorization.
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
-from auth.jwt_handler import JWTHandler, get_current_user
+from src.auth.jwt_handler import JWTHandler, get_current_user
 
 router = APIRouter()
 

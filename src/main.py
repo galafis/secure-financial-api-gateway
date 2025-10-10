@@ -1,26 +1,27 @@
-"""
-Secure Financial API Gateway
-Author: Gabriel Demetrios Lafis
-
-A production-ready API Gateway with advanced security features for financial services.
-"""
-
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
 import os
+from contextlib import asynccontextmanager
 
-from middleware.rate_limiter import RateLimiterMiddleware
-from middleware.circuit_breaker import CircuitBreakerMiddleware
-from middleware.request_logger import RequestLoggerMiddleware
-from middleware.security_headers import SecurityHeadersMiddleware
-from auth.jwt_handler import JWTHandler
-from routes import auth_routes, user_routes, trading_routes, admin_routes
-from utils.logger import setup_logger
+from src.middleware.rate_limiter import RateLimiterMiddleware
+from src.middleware.circuit_breaker import CircuitBreakerMiddleware
+from src.middleware.request_logger import RequestLoggerMiddleware
+from src.middleware.security_headers import SecurityHeadersMiddleware
+from src.auth.jwt_handler import JWTHandler
+from src.routes import auth_routes, user_routes, trading_routes, admin_routes
+from src.utils.logger import setup_logger
 
 # Initialize logger
 logger = setup_logger(__name__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Starting Secure Financial API Gateway")
+    logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'development')}")
+    yield
+    logger.info("Shutting down Secure Financial API Gateway")
 
 # Create FastAPI app
 app = FastAPI(
@@ -29,7 +30,8 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
-    openapi_url="/api/openapi.json"
+    openapi_url="/api/openapi.json",
+    lifespan=lifespan
 )
 
 # CORS Configuration
@@ -53,20 +55,6 @@ app.include_router(auth_routes.router, prefix="/api/v1/auth", tags=["Authenticat
 app.include_router(user_routes.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(trading_routes.router, prefix="/api/v1/trading", tags=["Trading"])
 app.include_router(admin_routes.router, prefix="/api/v1/admin", tags=["Admin"])
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup"""
-    logger.info("Starting Secure Financial API Gateway")
-    logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'development')}")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown"""
-    logger.info("Shutting down Secure Financial API Gateway")
-
 
 @app.get("/", tags=["Health"])
 async def root():
@@ -114,3 +102,4 @@ if __name__ == "__main__":
         reload=os.getenv("ENVIRONMENT") == "development",
         log_level="info"
     )
+

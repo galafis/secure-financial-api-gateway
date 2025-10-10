@@ -1,6 +1,6 @@
 """User Routes"""
 from fastapi import APIRouter, Depends
-from auth.jwt_handler import get_current_user
+from src.auth.jwt_handler import get_current_user
 
 router = APIRouter()
 

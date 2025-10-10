@@ -1,6 +1,6 @@
 """Admin Routes"""
 from fastapi import APIRouter, Depends
-from auth.jwt_handler import get_current_admin_user
+from src.auth.jwt_handler import get_current_admin_user
 
 router = APIRouter()
 
