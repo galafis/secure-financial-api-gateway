@@ -1,8 +1,11 @@
 """Request Logger Middleware"""
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi import Request
-import uuid
+
 import time
+import uuid
+
+from fastapi import Request
+from starlette.middleware.base import BaseHTTPMiddleware
+
 
 class RequestLoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):

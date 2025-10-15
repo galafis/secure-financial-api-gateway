@@ -1,20 +1,22 @@
-from fastapi import FastAPI, Request, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-import uvicorn
 import os
 from contextlib import asynccontextmanager
 
-from src.middleware.rate_limiter import RateLimiterMiddleware
+import uvicorn
+from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from src.auth.jwt_handler import JWTHandler
 from src.middleware.circuit_breaker import CircuitBreakerMiddleware
+from src.middleware.rate_limiter import RateLimiterMiddleware
 from src.middleware.request_logger import RequestLoggerMiddleware
 from src.middleware.security_headers import SecurityHeadersMiddleware
-from src.auth.jwt_handler import JWTHandler
-from src.routes import auth_routes, user_routes, trading_routes, admin_routes
+from src.routes import admin_routes, auth_routes, trading_routes, user_routes
 from src.utils.logger import setup_logger
 
 # Initialize logger
 logger = setup_logger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,6 +24,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'development')}")
     yield
     logger.info("Shutting down Secure Financial API Gateway")
+
 
 # Create FastAPI app
 app = FastAPI(
@@ -31,7 +34,7 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # CORS Configuration
@@ -41,7 +44,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["X-Request-ID", "X-RateLimit-Remaining"]
+    expose_headers=["X-Request-ID", "X-RateLimit-Remaining"],
 )
 
 # Add custom middleware (order matters!)
@@ -56,6 +59,7 @@ app.include_router(user_routes.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(trading_routes.router, prefix="/api/v1/trading", tags=["Trading"])
 app.include_router(admin_routes.router, prefix="/api/v1/admin", tags=["Admin"])
 
+
 @app.get("/", tags=["Health"])
 async def root():
     """Root endpoint"""
@@ -63,17 +67,19 @@ async def root():
         "service": "Secure Financial API Gateway",
         "version": "1.0.0",
         "status": "healthy",
-        "docs": "/api/docs"
+        "docs": "/api/docs",
     }
 
 
 @app.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint"""
+    from datetime import datetime, timezone
+
     return {
         "status": "healthy",
         "service": "api-gateway",
-        "timestamp": "2025-10-06T12:00:00Z"
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -86,20 +92,23 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={
             "error": "Internal Server Error",
             "message": "An unexpected error occurred",
-            "request_id": request.state.request_id if hasattr(request.state, "request_id") else None
-        }
+            "request_id": (
+                request.state.request_id
+                if hasattr(request.state, "request_id")
+                else None
+            ),
+        },
     )
 
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     host = os.getenv("HOST", "0.0.0.0")
-    
+
     uvicorn.run(
         "main:app",
         host=host,
         port=port,
         reload=os.getenv("ENVIRONMENT") == "development",
-        log_level="info"
+        log_level="info",
     )
-
