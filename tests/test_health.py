@@ -27,6 +27,9 @@ class TestHealthEndpoints:
         assert data["status"] == "healthy"
         assert data["service"] == "api-gateway"
         assert "timestamp" in data
+        # Verify timestamp is in ISO format
+        from datetime import datetime
+        datetime.fromisoformat(data["timestamp"].replace('Z', '+00:00'))
 
     def test_openapi_docs_accessible(self):
         """Test that OpenAPI docs are accessible"""
