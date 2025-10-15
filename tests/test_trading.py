@@ -1,6 +1,8 @@
 """Test trading routes"""
+
 import pytest
 from fastapi.testclient import TestClient
+
 from src.main import app
 
 client = TestClient(app)
@@ -22,15 +24,14 @@ class TestTradingRoutes:
             json={
                 "username": "traderuser",
                 "email": "trader@example.com",
-                "password": "Test@12345"
-            }
+                "password": "Test@12345",
+            },
         )
         token = register_response.json().get("access_token")
-        
+
         # Access orders
         response = client.get(
-            "/api/v1/trading/orders",
-            headers={"Authorization": f"Bearer {token}"}
+            "/api/v1/trading/orders", headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
         assert "orders" in response.json()

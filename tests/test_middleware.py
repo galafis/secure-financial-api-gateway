@@ -1,6 +1,8 @@
 """Test middleware components"""
+
 import pytest
 from fastapi.testclient import TestClient
+
 from src.main import app
 
 client = TestClient(app)
@@ -16,8 +18,8 @@ class TestRateLimiter:
             json={
                 "username": "ratelimituser",
                 "email": "ratelimit@example.com",
-                "password": "Test@12345"
-            }
+                "password": "Test@12345",
+            },
         )
         assert "X-RateLimit-Limit" in response.headers
         assert "X-RateLimit-Remaining" in response.headers
@@ -34,8 +36,8 @@ class TestRateLimiter:
                 json={
                     "username": f"user{i}",
                     "email": f"user{i}@example.com",
-                    "password": "Test@12345"
-                }
+                    "password": "Test@12345",
+                },
             )
             # Should still succeed with normal limits
             assert response.status_code in [200, 201, 409]  # 409 if user exists
@@ -53,16 +55,16 @@ class TestSecurityHeaders:
     def test_security_headers_present(self):
         """Test that all required security headers are present"""
         response = client.get("/")
-        
+
         assert "X-Content-Type-Options" in response.headers
         assert response.headers["X-Content-Type-Options"] == "nosniff"
-        
+
         assert "X-Frame-Options" in response.headers
         assert response.headers["X-Frame-Options"] == "DENY"
-        
+
         assert "X-XSS-Protection" in response.headers
         assert response.headers["X-XSS-Protection"] == "1; mode=block"
-        
+
         assert "Strict-Transport-Security" in response.headers
 
 
@@ -100,8 +102,8 @@ class TestCircuitBreaker:
             json={
                 "username": "circuituser",
                 "email": "circuit@example.com",
-                "password": "Test@12345"
-            }
+                "password": "Test@12345",
+            },
         )
         # Circuit should be closed (normal operation)
         assert response.status_code in [200, 201, 409]

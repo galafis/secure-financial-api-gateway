@@ -1,6 +1,8 @@
 """Test health and root endpoints"""
+
 import pytest
 from fastapi.testclient import TestClient
+
 from src.main import app
 
 client = TestClient(app)
@@ -29,7 +31,8 @@ class TestHealthEndpoints:
         assert "timestamp" in data
         # Verify timestamp is in ISO format
         from datetime import datetime
-        datetime.fromisoformat(data["timestamp"].replace('Z', '+00:00'))
+
+        datetime.fromisoformat(data["timestamp"].replace("Z", "+00:00"))
 
     def test_openapi_docs_accessible(self):
         """Test that OpenAPI docs are accessible"""

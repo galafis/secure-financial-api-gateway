@@ -1,6 +1,8 @@
 """Test user routes"""
+
 import pytest
 from fastapi.testclient import TestClient
+
 from src.main import app
 
 client = TestClient(app)
@@ -17,8 +19,7 @@ class TestUserRoutes:
     def test_get_profile_with_invalid_token(self):
         """Test accessing profile with invalid token"""
         response = client.get(
-            "/api/v1/users/profile",
-            headers={"Authorization": "Bearer invalid_token"}
+            "/api/v1/users/profile", headers={"Authorization": "Bearer invalid_token"}
         )
         assert response.status_code == 401
 
@@ -30,15 +31,14 @@ class TestUserRoutes:
             json={
                 "username": "profileuser",
                 "email": "profile@example.com",
-                "password": "Test@12345"
-            }
+                "password": "Test@12345",
+            },
         )
         token = register_response.json().get("access_token")
-        
+
         # Now access profile
         response = client.get(
-            "/api/v1/users/profile",
-            headers={"Authorization": f"Bearer {token}"}
+            "/api/v1/users/profile", headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
         assert "user" in response.json()
