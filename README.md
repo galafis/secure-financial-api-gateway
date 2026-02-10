@@ -1,11 +1,9 @@
 # 🔐 Secure Financial API Gateway
 
-[![CI/CD Pipeline](https://github.com/galafis/secure-financial-api-gateway/actions/workflows/ci.yml/badge.svg)](https://github.com/galafis/secure-financial-api-gateway/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green.svg)](https://fastapi.tiangolo.com/)
 [![Security](https://img.shields.io/badge/security-hardened-brightgreen.svg)](https://github.com/galafis/secure-financial-api-gateway)
-[![Code Coverage](https://img.shields.io/badge/coverage-84%25-brightgreen.svg)](https://github.com/galafis/secure-financial-api-gateway)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
