@@ -1,59 +1,45 @@
-# Frequently Asked Questions (FAQ)
+# Perguntas Frequentes / FAQ
 
-## General Questions
+## O que e este projeto? / What is this project?
 
-### What is this project?
-An API gateway built with FastAPI that implements common security patterns for financial applications, including JWT authentication, rate limiting, and circuit breaker protection.
+Um gateway de API construido com FastAPI que implementa padroes de seguranca para aplicacoes financeiras: autenticacao JWT, rate limiting, circuit breaker e headers de seguranca.
 
-### Who should use this?
-- Software engineers learning about financial systems
-- Trading firms looking for reference implementations
-- Developers building similar systems
-- Students studying financial technology
+An API gateway built with FastAPI that implements security patterns for financial applications: JWT authentication, rate limiting, circuit breaker, and security headers.
 
-### Is this production-ready?
-The code demonstrates production patterns, but the demo uses in-memory storage and ships with placeholder secrets. Before deploying to production, swap in a real database, configure proper secrets, and enable HTTPS.
+## Posso usar em producao? / Is this production-ready?
 
-## Technical Questions
+O codigo demonstra padroes de producao, mas utiliza armazenamento em memoria e segredos padrao. Antes de implantar:
+- Substitua o armazenamento em memoria por um banco de dados
+- Configure segredos JWT reais via variaveis de ambiente
+- Habilite HTTPS
+- Revise as politicas de CORS
 
-### What are the system requirements?
-See the README.md file for detailed system requirements and installation instructions.
+The code demonstrates production patterns but uses in-memory storage and default secrets. Before deploying:
+- Replace in-memory storage with a database
+- Configure real JWT secrets via environment variables
+- Enable HTTPS
+- Review CORS policies
 
-### How do I contribute?
-Please read the CONTRIBUTING.md file for guidelines on how to contribute to this project.
+## Quais sao os requisitos? / What are the requirements?
 
-### Where can I report bugs?
-Please open an issue on GitHub with a detailed description of the bug, steps to reproduce, and your environment details.
+- Python 3.12+
+- pip
+- Docker (opcional / optional)
 
-### How is the code tested?
-The project includes comprehensive unit tests, integration tests, and follows test-driven development practices. Run the test suite as described in the README.md.
+## Como contribuir? / How to contribute?
 
-## Performance Questions
+Leia o arquivo [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-### What is the expected performance?
-Performance metrics are documented in the technical documentation. Actual performance may vary based on your hardware and configuration.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
-### How can I optimize performance?
-See the performance tuning guide in the documentation folder for optimization tips and best practices.
+## Como reportar bugs? / How to report bugs?
 
-## Security Questions
+Abra uma issue no GitHub com descricao do bug, passos para reproduzir e detalhes do ambiente.
 
-### Is the code secure?
-Security is a top priority. The code follows OWASP best practices and includes multiple security layers. However, always perform your own security audit.
-
-### How are credentials handled?
-Credentials should never be hardcoded. Use environment variables or secure secret management systems.
-
-## Support
-
-### Where can I get help?
-- GitHub Issues: For bug reports and feature requests
-- GitHub Discussions: For questions and general discussions
-- Documentation: Check the docs/ folder for detailed guides
-
-### Is there commercial support available?
-This is an open-source project. For commercial support inquiries, please contact through GitHub.
+Open a GitHub issue with a description, reproduction steps, and environment details.
 
 ---
 
-**Didn't find your answer?** Open an issue on GitHub.
+Nao encontrou sua resposta? Abra uma issue no GitHub.
+
+Didn't find your answer? Open an issue on GitHub.

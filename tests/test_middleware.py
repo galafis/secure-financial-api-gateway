@@ -66,6 +66,11 @@ class TestSecurityHeaders:
         assert response.headers["X-XSS-Protection"] == "1; mode=block"
 
         assert "Strict-Transport-Security" in response.headers
+        assert "includeSubDomains" in response.headers["Strict-Transport-Security"]
+
+        assert "Content-Security-Policy" in response.headers
+        assert "Referrer-Policy" in response.headers
+        assert "Permissions-Policy" in response.headers
 
 
 class TestRequestLogger:

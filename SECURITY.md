@@ -18,7 +18,7 @@ We take the security of our software seriously. If you believe you have found a 
 **Please do NOT report security vulnerabilities through public GitHub issues.**
 
 Instead, please report them via email to the maintainer:
-- Email: [Your contact email - update this]
+- Email: Open a private security advisory on GitHub
 - Subject: [SECURITY] Brief description of the issue
 
 ### What to Include

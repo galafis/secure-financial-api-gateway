@@ -26,7 +26,7 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 ### Prerequisites
 
-- Python 3.11+
+- Python 3.12+
 - pip package manager
 - Docker (optional, for containerized development)
 

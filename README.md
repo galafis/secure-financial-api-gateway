@@ -1,108 +1,224 @@
-# 🔒 Secure Financial Api Gateway
+# Secure Financial API Gateway
 
-> Secure API gateway designed for financial services. Features OAuth2/JWT authentication, rate limiting, request validation, TLS encryption, and comprehensive audit trails.
+API gateway para servicos financeiros, com autenticacao JWT, rate limiting, circuit breaker e headers de seguranca.
 
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg)](https://img.shields.io/badge/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://img.shields.io/badge/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://img.shields.io/badge/)
-[![JWT](https://img.shields.io/badge/JWT-Auth-000000.svg)](https://img.shields.io/badge/)
-[![Redis](https://img.shields.io/badge/Redis-7-DC382D.svg)](https://img.shields.io/badge/)
+Financial services API gateway with JWT authentication, rate limiting, circuit breaker, and security headers.
+
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688.svg)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[English](#english) | [Português](#português)
+[Portugues](#portugues) | [English](#english)
+
+---
+
+## Portugues
+
+### Visao Geral
+
+Gateway de API construido com FastAPI que implementa padroes comuns de seguranca para aplicacoes financeiras:
+
+- **Autenticacao JWT** com access token (30 min) e refresh token (7 dias)
+- **Controle de acesso por papel (RBAC)** com perfis de admin e usuario
+- **Rate limiting** por IP usando algoritmo token bucket
+- **Circuit breaker** por endpoint para evitar falhas em cascata
+- **Headers de seguranca** seguindo recomendacoes OWASP (HSTS, CSP, X-Frame-Options, etc.)
+- **Logging de requisicoes** com ID de rastreamento e tempo de processamento
+- **Hashing de senhas** com bcrypt via Passlib
+
+O projeto utiliza armazenamento em memoria para dados de usuarios (adequado para demonstracao e aprendizado). Para uso em producao, substitua por um banco de dados real e configure segredos adequados.
+
+### Arquitetura
+
+```mermaid
+graph LR
+    Client[Cliente] --> RL[Rate Limiter]
+    RL --> CB[Circuit Breaker]
+    CB --> Log[Request Logger]
+    Log --> SH[Security Headers]
+    SH --> Routes[Rotas da API]
+    Routes --> Auth[Autenticacao JWT]
+    Routes --> Admin[Admin]
+    Routes --> User[Perfil]
+    Routes --> Trading[Orders]
+```
+
+A pipeline de middleware processa cada requisicao na seguinte ordem:
+1. **Circuit Breaker** — rejeita requisicoes se o endpoint estiver com taxa de erro alta
+2. **Rate Limiter** — aplica limite de requisicoes por IP (token bucket)
+3. **Request Logger** — registra metodo, path, status e duracao
+4. **Security Headers** — adiciona headers de seguranca a resposta
+
+### Endpoints da API
+
+| Metodo | Endpoint | Descricao | Autenticacao |
+|--------|----------|-----------|--------------|
+| `GET` | `/` | Informacoes do servico | Nao |
+| `GET` | `/health` | Health check | Nao |
+| `POST` | `/api/v1/auth/login` | Login (retorna tokens JWT) | Nao |
+| `POST` | `/api/v1/auth/register` | Registro de novo usuario | Nao |
+| `POST` | `/api/v1/auth/refresh` | Renovar access token | Refresh token |
+| `GET` | `/api/v1/auth/me` | Dados do usuario autenticado | Bearer token |
+| `POST` | `/api/v1/auth/logout` | Logout (sem invalidacao server-side) | Bearer token |
+| `GET` | `/api/v1/users/profile` | Perfil do usuario | Bearer token |
+| `GET` | `/api/v1/trading/orders` | Listar orders (demo) | Bearer token |
+| `GET` | `/api/v1/admin/users` | Listar usuarios (admin) | Bearer token (admin) |
+
+### Inicio Rapido
+
+```bash
+# Clonar o repositorio
+git clone https://github.com/galafis/secure-financial-api-gateway.git
+cd secure-financial-api-gateway
+
+# Criar e ativar ambiente virtual
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Instalar dependencias (producao)
+pip install -r requirements.txt
+
+# Instalar dependencias (desenvolvimento + testes)
+pip install -r requirements-dev.txt
+
+# Copiar variaveis de ambiente
+cp .env.example .env
+
+# Executar a aplicacao
+make run
+# ou diretamente:
+python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+A documentacao interativa estara disponivel em `http://localhost:8000/api/docs` (Swagger) e `http://localhost:8000/api/redoc` (ReDoc).
+
+### Docker
+
+```bash
+# Build e execucao
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
+```
+
+### Testes
+
+```bash
+# Executar todos os testes
+make test
+
+# Com relatorio de cobertura
+make test-cov
+```
+
+### Estrutura do Projeto
+
+```
+secure-financial-api-gateway/
+├── src/
+│   ├── auth/
+│   │   └── jwt_handler.py      # Geracao/validacao de JWT, hashing de senhas
+│   ├── middleware/
+│   │   ├── circuit_breaker.py   # Circuit breaker por endpoint
+│   │   ├── rate_limiter.py      # Rate limiter com token bucket
+│   │   ├── request_logger.py    # Log de requisicoes HTTP
+│   │   └── security_headers.py  # Headers OWASP
+│   ├── routes/
+│   │   ├── admin_routes.py      # Endpoints administrativos
+│   │   ├── auth_routes.py       # Login, registro, refresh, logout
+│   │   ├── trading_routes.py    # Endpoints de trading (demo)
+│   │   └── user_routes.py       # Perfil do usuario
+│   ├── utils/
+│   │   └── logger.py            # Configuracao de logger
+│   └── main.py                  # Aplicacao FastAPI e middleware
+├── tests/                       # Testes unitarios e de integracao
+├── docs/                        # Documentacao adicional
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt             # Dependencias de producao
+├── requirements-dev.txt         # Dependencias de desenvolvimento
+├── Makefile
+└── README.md
+```
+
+### Stack Tecnologica
+
+| Tecnologia | Versao | Papel |
+|------------|--------|-------|
+| Python | 3.12 | Linguagem principal |
+| FastAPI | 0.104+ | Framework web async |
+| PyJWT | 2.8+ | Tokens JWT |
+| Passlib + bcrypt | - | Hashing de senhas |
+| Pydantic | 2.4+ | Validacao de dados |
+| Uvicorn | 0.24+ | Servidor ASGI |
+| Docker | - | Containerizacao |
+
+### Limitacoes Conhecidas
+
+- Armazenamento de usuarios em memoria (dados perdidos ao reiniciar)
+- Logout nao invalida token server-side (tokens expiram naturalmente)
+- Rate limiter e circuit breaker nao distribuidos (cada instancia tem estado isolado)
+- Endpoints de trading sao placeholders (retornam dados vazios)
 
 ---
 
 ## English
 
-### 🎯 Overview
+### Overview
 
-**Secure Financial Api Gateway** is a production-grade Python application that showcases modern software engineering practices including clean architecture, comprehensive testing, containerized deployment, and CI/CD readiness.
+API gateway built with FastAPI that implements common security patterns for financial applications:
 
-The codebase comprises **1,183 lines** of source code organized across **22 modules**, following industry best practices for maintainability, scalability, and code quality.
+- **JWT authentication** with access tokens (30 min) and refresh tokens (7 days)
+- **Role-based access control (RBAC)** with admin and user roles
+- **Rate limiting** per IP using the token bucket algorithm
+- **Circuit breaker** per endpoint to prevent cascading failures
+- **Security headers** following OWASP recommendations (HSTS, CSP, X-Frame-Options, etc.)
+- **Request logging** with tracing ID and processing time
+- **Password hashing** with bcrypt via Passlib
 
-### ✨ Key Features
+The project uses in-memory storage for user data (suitable for demos and learning). For production use, swap in a real database and configure proper secrets.
 
-- **🔒 Authentication**: JWT-based authentication with token refresh
-- **🛡️ Authorization**: Role-based access control (RBAC)
-- **🔐 Encryption**: AES-256 encryption for sensitive data
-- **📝 Audit Logging**: Complete audit trail for all operations
-- **⚡ Async API**: High-performance async REST API with FastAPI
-- **📖 Auto-Documentation**: Interactive Swagger UI and ReDoc
-- **✅ Validation**: Pydantic-powered request/response validation
-- **🐳 Containerized**: Docker support for consistent deployment
-
-### 🏗️ Architecture
+### Architecture
 
 ```mermaid
-graph TB
-    subgraph Client["🖥️ Client Layer"]
-        A[Web Client]
-        B[API Documentation]
-    end
-    
-    subgraph API["⚡ API Layer"]
-        C[Middleware Pipeline]
-        D[Route Handlers]
-        E[Business Logic]
-    end
-    
-    subgraph Data["💾 Data Layer"]
-        F[(Primary Database)]
-        G[Cache]
-    end
-    
-    A --> C
-    B --> C
-    C --> D --> E
-    E --> F
-    E --> G
-    
-    style Client fill:#e1f5fe
-    style API fill:#f3e5f5
-    style Data fill:#fff3e0
+graph LR
+    Client[Client] --> RL[Rate Limiter]
+    RL --> CB[Circuit Breaker]
+    CB --> Log[Request Logger]
+    Log --> SH[Security Headers]
+    SH --> Routes[API Routes]
+    Routes --> Auth[JWT Auth]
+    Routes --> Admin[Admin]
+    Routes --> User[Profile]
+    Routes --> Trading[Orders]
 ```
 
-```mermaid
-classDiagram
-    class CircuitBreakerMiddleware
-    class RateLimiterMiddleware
-    class JWTHandler
-    class CircuitBreaker
-    class CircuitState
-    class TokenBucket
-    class RegisterRequest
-    class RequestLoggerMiddleware
-    class TokenResponse
-    class LoginRequest
-    JWTHandler --> CircuitBreakerMiddleware : uses
-    JWTHandler --> RateLimiterMiddleware : uses
-    JWTHandler --> JWTHandler : uses
-```
+The middleware pipeline processes each request in the following order:
+1. **Circuit Breaker** -- rejects requests if the endpoint has a high error rate
+2. **Rate Limiter** -- enforces per-IP request limits (token bucket)
+3. **Request Logger** -- logs method, path, status code, and duration
+4. **Security Headers** -- adds security headers to the response
 
-### 📡 API Endpoints
+### API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Retrieve resource (list/create) |
-| `GET` | `/health` | Retrieve Health |
-| `GET` | `/users` | Retrieve Users |
-| `POST` | `/login` | Create Login |
-| `POST` | `/refresh` | Create Refresh |
-| `GET` | `/me` | Retrieve Me |
-| `POST` | `/logout` | Create Logout |
-| `GET` | `/orders` | Retrieve Orders |
-| `GET` | `/profile` | Retrieve Profile |
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `GET` | `/` | Service info | No |
+| `GET` | `/health` | Health check | No |
+| `POST` | `/api/v1/auth/login` | Login (returns JWT tokens) | No |
+| `POST` | `/api/v1/auth/register` | Register new user | No |
+| `POST` | `/api/v1/auth/refresh` | Refresh access token | Refresh token |
+| `GET` | `/api/v1/auth/me` | Authenticated user info | Bearer token |
+| `POST` | `/api/v1/auth/logout` | Logout (no server-side invalidation) | Bearer token |
+| `GET` | `/api/v1/users/profile` | User profile | Bearer token |
+| `GET` | `/api/v1/trading/orders` | List orders (demo) | Bearer token |
+| `GET` | `/api/v1/admin/users` | List users (admin only) | Bearer token (admin) |
 
-### 🚀 Quick Start
-
-#### Prerequisites
-
-- Python 3.12+
-- pip (Python package manager)
-- Docker and Docker Compose (optional)
-
-#### Installation
+### Quick Start
 
 ```bash
 # Clone the repository
@@ -111,401 +227,107 @@ cd secure-financial-api-gateway
 
 # Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
+# Install dependencies (production)
 pip install -r requirements.txt
-```
 
-#### Running
+# Install dependencies (development + tests)
+pip install -r requirements-dev.txt
 
-```bash
+# Copy environment variables
+cp .env.example .env
+
 # Run the application
-python src/main.py
+make run
+# or directly:
+python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 🐳 Docker
+Interactive documentation is available at `http://localhost:8000/api/docs` (Swagger) and `http://localhost:8000/api/redoc` (ReDoc).
+
+### Docker
 
 ```bash
-# Start all services
+# Build and run
 docker-compose up -d
 
 # View logs
 docker-compose logs -f
 
-# Stop all services
+# Stop
 docker-compose down
-
-# Rebuild after changes
-docker-compose up -d --build
 ```
 
-### 🧪 Testing
+### Tests
 
 ```bash
 # Run all tests
-pytest
+make test
 
-# Run with coverage report
-pytest --cov --cov-report=html
-
-# Run specific test module
-pytest tests/test_main.py -v
-
-# Run with detailed output
-pytest -v --tb=short
+# With coverage report
+make test-cov
 ```
 
-### 📁 Project Structure
+### Project Structure
 
 ```
 secure-financial-api-gateway/
-├── docs/          # Documentation
-│   ├── FAQ.md
-│   ├── USE_CASES.md
-│   └── security.md
-├── src/          # Source code
+├── src/
 │   ├── auth/
-│   │   ├── __init__.py
-│   │   └── jwt_handler.py
+│   │   └── jwt_handler.py      # JWT generation/validation, password hashing
 │   ├── middleware/
-│   │   ├── __init__.py
-│   │   ├── circuit_breaker.py
-│   │   ├── rate_limiter.py
-│   │   ├── request_logger.py
-│   │   └── security_headers.py
+│   │   ├── circuit_breaker.py   # Per-endpoint circuit breaker
+│   │   ├── rate_limiter.py      # Token bucket rate limiter
+│   │   ├── request_logger.py    # HTTP request logging
+│   │   └── security_headers.py  # OWASP security headers
 │   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── admin_routes.py
-│   │   ├── auth_routes.py
-│   │   ├── trading_routes.py
-│   │   └── user_routes.py
-│   ├── utils/         # Utilities
-│   │   ├── __init__.py
-│   │   └── logger.py
-│   ├── __init__.py
-│   └── main.py
-├── tests/         # Test suite
-│   ├── test_admin.py
-│   ├── test_auth.py
-│   ├── test_health.py
-│   ├── test_middleware.py
-│   ├── test_trading.py
-│   └── test_users.py
-├── CONTRIBUTING.md
+│   │   ├── admin_routes.py      # Admin endpoints
+│   │   ├── auth_routes.py       # Login, register, refresh, logout
+│   │   ├── trading_routes.py    # Trading endpoints (demo)
+│   │   └── user_routes.py       # User profile
+│   ├── utils/
+│   │   └── logger.py            # Logger setup
+│   └── main.py                  # FastAPI app and middleware
+├── tests/                       # Unit and integration tests
+├── docs/                        # Additional documentation
 ├── Dockerfile
-├── LICENSE
-├── Makefile
-├── README.md
-├── SECURITY.md
 ├── docker-compose.yml
-├── pyproject.toml
-└── requirements.txt
+├── requirements.txt             # Production dependencies
+├── requirements-dev.txt         # Development dependencies
+├── Makefile
+└── README.md
 ```
 
-### 🔒 Security Considerations
+### Tech Stack
 
-| Feature | Implementation |
-|---------|---------------|
-| **Authentication** | JWT tokens with configurable expiration |
-| **Authorization** | Role-based access control (RBAC) |
-| **Input Validation** | Schema-based validation on all endpoints |
-| **Rate Limiting** | Configurable request throttling |
-| **Data Encryption** | AES-256 for sensitive data at rest |
-| **SQL Injection** | ORM-based queries prevent injection |
-| **CORS** | Configurable CORS policies |
-| **Audit Logging** | Complete request/response audit trail |
+| Technology | Version | Role |
+|------------|---------|------|
+| Python | 3.12 | Core language |
+| FastAPI | 0.104+ | Async web framework |
+| PyJWT | 2.8+ | JWT tokens |
+| Passlib + bcrypt | - | Password hashing |
+| Pydantic | 2.4+ | Data validation |
+| Uvicorn | 0.24+ | ASGI server |
+| Docker | - | Containerization |
 
-> ⚠️ **Production Deployment**: Always configure proper SSL/TLS, rotate secrets regularly, and follow the principle of least privilege.
+### Known Limitations
 
-### 🛠️ Tech Stack
-
-| Technology | Description | Role |
-|------------|-------------|------|
-| **Python** | Core Language | Primary |
-| **Docker** | Containerization platform | Framework |
-| **FastAPI** | High-performance async web framework | Framework |
-| **JWT** | Token-based authentication | Framework |
-| **Redis** | In-memory data store | Framework |
-
-### 🚀 Deployment
-
-#### Cloud Deployment Options
-
-The application is containerized and ready for deployment on:
-
-| Platform | Service | Notes |
-|----------|---------|-------|
-| **AWS** | ECS, EKS, EC2 | Full container support |
-| **Google Cloud** | Cloud Run, GKE | Serverless option available |
-| **Azure** | Container Instances, AKS | Enterprise integration |
-| **DigitalOcean** | App Platform, Droplets | Cost-effective option |
-
-```bash
-# Production build
-docker build -t secure-financial-api-gateway:latest .
-
-# Tag for registry
-docker tag secure-financial-api-gateway:latest registry.example.com/secure-financial-api-gateway:latest
-
-# Push to registry
-docker push registry.example.com/secure-financial-api-gateway:latest
-```
-
-### 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### 👤 Author
-
-**Gabriel Demetrios Lafis**
-- GitHub: [@galafis](https://github.com/galafis)
-- LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
+- In-memory user storage (data lost on restart)
+- Logout does not invalidate token server-side (tokens expire naturally)
+- Rate limiter and circuit breaker are not distributed (each instance has isolated state)
+- Trading endpoints are placeholders (return empty data)
 
 ---
 
-## Português
-
-### 🎯 Visão Geral
-
-**Secure Financial Api Gateway** é uma aplicação Python de nível profissional que demonstra práticas modernas de engenharia de software, incluindo arquitetura limpa, testes abrangentes, implantação containerizada e prontidão para CI/CD.
-
-A base de código compreende **1,183 linhas** de código-fonte organizadas em **22 módulos**, seguindo as melhores práticas do setor para manutenibilidade, escalabilidade e qualidade de código.
-
-### ✨ Funcionalidades Principais
-
-- **🔒 Authentication**: JWT-based authentication with token refresh
-- **🛡️ Authorization**: Role-based access control (RBAC)
-- **🔐 Encryption**: AES-256 encryption for sensitive data
-- **📝 Audit Logging**: Complete audit trail for all operations
-- **⚡ Async API**: High-performance async REST API with FastAPI
-- **📖 Auto-Documentation**: Interactive Swagger UI and ReDoc
-- **✅ Validation**: Pydantic-powered request/response validation
-- **🐳 Containerized**: Docker support for consistent deployment
-
-### 🏗️ Arquitetura
-
-```mermaid
-graph TB
-    subgraph Client["🖥️ Client Layer"]
-        A[Web Client]
-        B[API Documentation]
-    end
-    
-    subgraph API["⚡ API Layer"]
-        C[Middleware Pipeline]
-        D[Route Handlers]
-        E[Business Logic]
-    end
-    
-    subgraph Data["💾 Data Layer"]
-        F[(Primary Database)]
-        G[Cache]
-    end
-    
-    A --> C
-    B --> C
-    C --> D --> E
-    E --> F
-    E --> G
-    
-    style Client fill:#e1f5fe
-    style API fill:#f3e5f5
-    style Data fill:#fff3e0
-```
-
-### 📡 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Retrieve resource (list/create) |
-| `GET` | `/health` | Retrieve Health |
-| `GET` | `/users` | Retrieve Users |
-| `POST` | `/login` | Create Login |
-| `POST` | `/refresh` | Create Refresh |
-| `GET` | `/me` | Retrieve Me |
-| `POST` | `/logout` | Create Logout |
-| `GET` | `/orders` | Retrieve Orders |
-| `GET` | `/profile` | Retrieve Profile |
-
-### 🚀 Início Rápido
-
-#### Prerequisites
-
-- Python 3.12+
-- pip (Python package manager)
-- Docker and Docker Compose (optional)
-
-#### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/galafis/secure-financial-api-gateway.git
-cd secure-financial-api-gateway
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-#### Running
-
-```bash
-# Run the application
-python src/main.py
-```
-
-### 🐳 Docker
-
-```bash
-# Start all services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop all services
-docker-compose down
-
-# Rebuild after changes
-docker-compose up -d --build
-```
-
-### 🧪 Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage report
-pytest --cov --cov-report=html
-
-# Run specific test module
-pytest tests/test_main.py -v
-
-# Run with detailed output
-pytest -v --tb=short
-```
-
-### 📁 Estrutura do Projeto
-
-```
-secure-financial-api-gateway/
-├── docs/          # Documentation
-│   ├── FAQ.md
-│   ├── USE_CASES.md
-│   └── security.md
-├── src/          # Source code
-│   ├── auth/
-│   │   ├── __init__.py
-│   │   └── jwt_handler.py
-│   ├── middleware/
-│   │   ├── __init__.py
-│   │   ├── circuit_breaker.py
-│   │   ├── rate_limiter.py
-│   │   ├── request_logger.py
-│   │   └── security_headers.py
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── admin_routes.py
-│   │   ├── auth_routes.py
-│   │   ├── trading_routes.py
-│   │   └── user_routes.py
-│   ├── utils/         # Utilities
-│   │   ├── __init__.py
-│   │   └── logger.py
-│   ├── __init__.py
-│   └── main.py
-├── tests/         # Test suite
-│   ├── test_admin.py
-│   ├── test_auth.py
-│   ├── test_health.py
-│   ├── test_middleware.py
-│   ├── test_trading.py
-│   └── test_users.py
-├── CONTRIBUTING.md
-├── Dockerfile
-├── LICENSE
-├── Makefile
-├── README.md
-├── SECURITY.md
-├── docker-compose.yml
-├── pyproject.toml
-└── requirements.txt
-```
-
-### 🔒 Security Considerations
-
-| Feature | Implementation |
-|---------|---------------|
-| **Authentication** | JWT tokens with configurable expiration |
-| **Authorization** | Role-based access control (RBAC) |
-| **Input Validation** | Schema-based validation on all endpoints |
-| **Rate Limiting** | Configurable request throttling |
-| **Data Encryption** | AES-256 for sensitive data at rest |
-| **SQL Injection** | ORM-based queries prevent injection |
-| **CORS** | Configurable CORS policies |
-| **Audit Logging** | Complete request/response audit trail |
-
-> ⚠️ **Production Deployment**: Always configure proper SSL/TLS, rotate secrets regularly, and follow the principle of least privilege.
-
-### 🛠️ Stack Tecnológica
-
-| Tecnologia | Descrição | Papel |
-|------------|-----------|-------|
-| **Python** | Core Language | Primary |
-| **Docker** | Containerization platform | Framework |
-| **FastAPI** | High-performance async web framework | Framework |
-| **JWT** | Token-based authentication | Framework |
-| **Redis** | In-memory data store | Framework |
-
-### 🚀 Deployment
-
-#### Cloud Deployment Options
-
-The application is containerized and ready for deployment on:
-
-| Platform | Service | Notes |
-|----------|---------|-------|
-| **AWS** | ECS, EKS, EC2 | Full container support |
-| **Google Cloud** | Cloud Run, GKE | Serverless option available |
-| **Azure** | Container Instances, AKS | Enterprise integration |
-| **DigitalOcean** | App Platform, Droplets | Cost-effective option |
-
-```bash
-# Production build
-docker build -t secure-financial-api-gateway:latest .
-
-# Tag for registry
-docker tag secure-financial-api-gateway:latest registry.example.com/secure-financial-api-gateway:latest
-
-# Push to registry
-docker push registry.example.com/secure-financial-api-gateway:latest
-```
-
-### 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para enviar um Pull Request.
-
-### 📄 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-### 👤 Autor
+## Author / Autor
 
 **Gabriel Demetrios Lafis**
 - GitHub: [@galafis](https://github.com/galafis)
 - LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
+
+## License / Licenca
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Este projeto esta licenciado sob a Licenca MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
