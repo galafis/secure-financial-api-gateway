@@ -1,95 +1,33 @@
-# Use Cases
+# Casos de Uso / Use Cases
 
-## Overview
+## Aprendizado / Learning
 
-This document describes common use cases and scenarios where this project can be applied.
+Estudantes e desenvolvedores podem usar este projeto para entender como implementar:
+- Autenticacao JWT em APIs REST
+- Middleware pipeline (rate limiting, circuit breaker, logging)
+- Headers de seguranca OWASP
+- Testes automatizados com FastAPI TestClient
 
-## Use Case 1: Learning and Education
+Students and developers can use this project to understand how to implement:
+- JWT authentication in REST APIs
+- Middleware pipelines (rate limiting, circuit breaker, logging)
+- OWASP security headers
+- Automated testing with FastAPI TestClient
 
-**Scenario:** Students and developers learning about financial systems architecture.
+## Implementacao de Referencia / Reference Implementation
 
-**Benefits:**
-- Real-world code examples
-- Best practices demonstration
-- Comprehensive documentation
-- Test-driven development examples
+Equipes construindo gateways de API podem usar este projeto como ponto de partida, adaptando os componentes de middleware e autenticacao para suas necessidades.
 
-**Implementation:**
-1. Clone the repository
-2. Study the code structure
-3. Run the examples
-4. Modify and experiment
+Teams building API gateways can use this project as a starting point, adapting the middleware and authentication components to their needs.
 
-## Use Case 2: Reference Implementation
+## Prototipagem / Prototyping
 
-**Scenario:** Development teams building similar systems.
+Fork o repositorio, substitua o armazenamento em memoria por um banco de dados, adicione sua logica de negocios e faca deploy.
 
-**Benefits:**
-- Proven architecture patterns
-- Production-ready code quality
-- Comprehensive error handling
-- Performance optimization examples
-
-**Implementation:**
-1. Review the architecture documentation
-2. Adapt patterns to your needs
-3. Customize for your use case
-4. Maintain test coverage
-
-## Use Case 3: Rapid Prototyping
-
-**Scenario:** Quickly building a proof-of-concept or MVP.
-
-**Benefits:**
-- Ready-to-use components
-- Minimal setup required
-- Extensible architecture
-- Clear documentation
-
-**Implementation:**
-1. Fork the repository
-2. Customize for your needs
-3. Add your business logic
-4. Deploy and iterate
-
-## Use Case 4: Code Review and Best Practices
-
-**Scenario:** Teams looking to improve code quality and practices.
-
-**Benefits:**
-- Clean code examples
-- Design pattern implementations
-- Testing strategies
-- Documentation standards
-
-**Implementation:**
-1. Review the codebase
-2. Compare with your code
-3. Adopt best practices
-4. Improve your standards
-
-## Integration Scenarios
-
-### Scenario A: Standalone Application
-Use as a complete, standalone application with minimal modifications.
-
-### Scenario B: Microservice
-Integrate as a microservice in a larger system architecture.
-
-### Scenario C: Library/SDK
-Use components as a library in your own application.
-
-### Scenario D: Learning Tool
-Study the code to understand concepts and patterns.
-
-## Real-World Applications
-
-1. **Trading Systems**: Order management and execution
-2. **Financial Platforms**: Account and position management
-3. **Risk Management**: Pre-trade and post-trade risk checks
-4. **Market Data**: Real-time data processing and distribution
-5. **Analytics**: Performance analysis and reporting
+Fork the repository, replace in-memory storage with a database, add your business logic, and deploy.
 
 ---
 
-**Have a use case to share?** Open an issue on GitHub.
+Tem um caso de uso para compartilhar? Abra uma issue no GitHub.
+
+Have a use case to share? Open an issue on GitHub.

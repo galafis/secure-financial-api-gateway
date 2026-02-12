@@ -5,8 +5,6 @@ Author: Gabriel Demetrios Lafis
 Routes for user authentication and authorization.
 """
 
-from typing import Optional
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 

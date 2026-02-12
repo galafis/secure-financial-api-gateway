@@ -41,4 +41,8 @@ class TestUserRoutes:
             "/api/v1/users/profile", headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
-        assert "user" in response.json()
+        data = response.json()
+        assert "user_id" in data
+        assert "username" in data
+        assert data["username"] == "profileuser"
+        assert data["email"] == "profile@example.com"

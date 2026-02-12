@@ -5,6 +5,7 @@ Author: Gabriel Demetrios Lafis
 JWT token generation and validation with security best practices.
 """
 
+import logging
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
@@ -14,10 +15,19 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 
+logger = logging.getLogger(__name__)
+
 # Configuration
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+_DEFAULT_SECRET = "your-secret-key-change-in-production"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", _DEFAULT_SECRET)
+if SECRET_KEY == _DEFAULT_SECRET:
+    logger.warning(
+        "JWT_SECRET_KEY is using the insecure default value. "
+        "Set the JWT_SECRET_KEY environment variable before deploying."
+    )
+
+ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 # Password hashing
