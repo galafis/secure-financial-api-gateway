@@ -158,7 +158,7 @@ stateDiagram-v2
 ```
 
 **Token Lifecycle:**
-- **Access Token**: 1 hour expiration
+- **Access Token**: 30 minutes expiration
 - **Refresh Token**: 7 days expiration
 - **Rotation**: New refresh token on each refresh
 

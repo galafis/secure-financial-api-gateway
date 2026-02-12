@@ -2,7 +2,7 @@
 Rate Limiter Middleware
 Author: Gabriel Demetrios Lafis
 
-Token bucket algorithm for rate limiting with Redis backend.
+Token bucket algorithm for in-memory rate limiting.
 """
 
 import hashlib
@@ -54,7 +54,6 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
     - Per-IP rate limiting
     - Per-user rate limiting (if authenticated)
     - Configurable limits
-    - Redis backend support (optional)
     """
 
     def __init__(self, app, requests_per_minute: int = 60):

@@ -258,12 +258,20 @@ secure-financial-api-gateway/
 │   └── utils/
 │       └── logger.py               # Logging utilities
 ├── tests/
-│   └── test_auth.py                # Authentication tests
-├── config/
-│   └── settings.py                 # Configuration settings
+│   ├── test_auth.py                # Authentication tests
+│   ├── test_health.py              # Health endpoint tests
+│   ├── test_middleware.py           # Middleware tests
+│   ├── test_users.py               # User route tests
+│   ├── test_trading.py             # Trading route tests
+│   └── test_admin.py               # Admin route tests
 ├── docs/
-│   └── api_documentation.md        # API documentation
+│   ├── FAQ.md                      # Frequently asked questions
+│   ├── security.md                 # Security architecture
+│   └── USE_CASES.md                # Use case documentation
 ├── requirements.txt                # Python dependencies
+├── Dockerfile                      # Container image definition
+├── docker-compose.yml              # Multi-container setup
+├── Makefile                        # Common development tasks
 └── README.md                       # This file
 ```
 
@@ -467,13 +475,12 @@ ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
 4. **Async Processing** - Better concurrency handling
 5. **Load Balancing** - Distribute traffic across instances
 
-### Performance Metrics
+### Performance Considerations
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Response Time (p95) | < 100ms | ~50ms |
-| Requests/sec | > 1000 | ~2500 |
-| Memory Usage | < 512MB | ~200MB |
+| Metric | Target |
+|--------|--------|
+| Response Time (p95) | < 100ms |
+| Memory Usage | < 512MB |
 
 ---
 
@@ -704,11 +711,10 @@ python -m pytest tests/ --cov=src --cov-report=html
 
 ### 📊 Métricas de Performance
 
-| Métrica | Alvo | Atual |
-|---------|------|-------|
-| Tempo de Resposta (p95) | < 100ms | ~50ms |
-| Requisições/seg | > 1000 | ~2500 |
-| Uso de Memória | < 512MB | ~200MB |
+| Métrica | Alvo |
+|---------|------|
+| Tempo de Resposta (p95) | < 100ms |
+| Uso de Memória | < 512MB |
 
 ### ❓ Perguntas Frequentes
 
@@ -747,8 +753,4 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 - GitHub: [@galafis](https://github.com/galafis)
 - LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-lafis)
 
----
 
-## ⭐ Mostre seu apoio
-
-Se este projeto foi útil para você, considere dar uma ⭐️!

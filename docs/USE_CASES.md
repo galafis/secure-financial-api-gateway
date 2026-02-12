@@ -90,12 +90,6 @@ Study the code to understand concepts and patterns.
 4. **Market Data**: Real-time data processing and distribution
 5. **Analytics**: Performance analysis and reporting
 
-## Success Stories
-
-> "This project helped our team understand modern trading system architecture and saved us months of development time." - Development Team Lead
-
-> "The code quality and documentation are exceptional. We use it as a reference for our own projects." - Senior Software Engineer
-
 ---
 
-**Have a use case to share?** Open a discussion on GitHub!
+**Have a use case to share?** Open an issue on GitHub.

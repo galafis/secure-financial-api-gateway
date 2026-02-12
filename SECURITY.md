@@ -86,9 +86,7 @@ When using this API Gateway, please ensure:
 
 This project undergoes regular security reviews:
 - **Code Review**: Every pull request is reviewed for security issues
-- **Dependency Scanning**: Automated dependency vulnerability scanning via GitHub Actions
 - **Static Analysis**: Security static analysis with Bandit
-- **Last Security Audit**: [Date] - [Brief findings]
 
 ## Acknowledgments
 

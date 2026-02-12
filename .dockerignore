@@ -3,9 +3,6 @@
 .gitignore
 .gitattributes
 
-# CI/CD
-.github
-
 # Python
 __pycache__/
 *.py[cod]

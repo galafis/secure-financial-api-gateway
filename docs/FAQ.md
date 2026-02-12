@@ -3,7 +3,7 @@
 ## General Questions
 
 ### What is this project?
-This project provides a professional-grade solution for financial technology applications, demonstrating best practices in software engineering, architecture, and system design.
+An API gateway built with FastAPI that implements common security patterns for financial applications, including JWT authentication, rate limiting, and circuit breaker protection.
 
 ### Who should use this?
 - Software engineers learning about financial systems
@@ -12,7 +12,7 @@ This project provides a professional-grade solution for financial technology app
 - Students studying financial technology
 
 ### Is this production-ready?
-Yes, the code follows production-ready standards with comprehensive testing, error handling, and documentation. However, always perform your own testing and due diligence before deploying to production.
+The code demonstrates production patterns, but the demo uses in-memory storage and ships with placeholder secrets. Before deploying to production, swap in a real database, configure proper secrets, and enable HTTPS.
 
 ## Technical Questions
 
@@ -56,4 +56,4 @@ This is an open-source project. For commercial support inquiries, please contact
 
 ---
 
-**Didn't find your answer?** Open an issue on GitHub!
+**Didn't find your answer?** Open an issue on GitHub.
